@@ -4,8 +4,6 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 import { connectDB } from './database'; // Import the function to establish the database connection
 
 async function bootstrap() {
-  await connectDB(); // Establish the database connection
-
   const app = await NestFactory.create(AppModule);
 
   const corsOptions: CorsOptions = {
@@ -19,7 +17,11 @@ async function bootstrap() {
 
   app.enableCors(corsOptions);
 
-  await app.listen(3000);
+  await connectDB(); // Establish the database connection
+
+  await app.listen(3000, () => {
+    console.log('Listening for requests');
+  });
 }
 
 bootstrap();
