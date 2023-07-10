@@ -1,12 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import { Mongoose } from 'mongoose';
-
-let app: any;
 
 async function bootstrap() {
-  app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
   const corsOptions: CorsOptions = {
     origin: 'https://ecommerce-gules-two.vercel.app/', // Replace with your frontend URL
@@ -19,12 +16,9 @@ async function bootstrap() {
 
   app.enableCors(corsOptions);
 
-  await app.listen(3000);
+  await app.listen(3000, () => {
+    console.log('Listening for requests');
+  });
 }
 
 bootstrap();
-
-export const getApp = async (): Promise<any> => {
-  await app.init();
-  return app;
-};
