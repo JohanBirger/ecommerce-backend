@@ -7,7 +7,10 @@ import { ItemDTO } from './dtos/item.dto';
 
 @Injectable()
 export class CartService {
-  constructor(@InjectModel('Cart') private readonly cartModel: Model<CartDocument>) { }
+  constructor(
+    @InjectModel('Cart') private readonly cartModel: Model<CartDocument>
+   
+    ) { }
 
 
   async createCart(userId: string, itemDTO: ItemDTO, subTotalPrice: number, totalPrice: number): Promise<Cart> {
@@ -66,12 +69,31 @@ export class CartService {
     }
   }
 
+  async updateItemQuantityInCart(userId: string, productId: string, quantity: number): Promise<any> {
+    console.log(`Updating quantity for product ${productId} in cart for user ${userId} to ${quantity}`);
+    const cart = await this.getCart(userId);
+
+    const itemIndex = cart.items.findIndex((item) => item.productId == productId);
+    console.log(cart.items)
+    console.log(`Found product at index ${itemIndex}`);
+
+    if (itemIndex > -1) {
+      cart.items[itemIndex].quantity = quantity;
+      cart.items[itemIndex].subTotalPrice = cart.items[itemIndex].price * quantity;
+      cart.markModified('items'); // <-- Add this line (Thank god for gpt)
+      this.updateCartTotal(cart);
+      
+      console.log('Updated cart:', cart);
+      return cart.save();
+    }
+  }
   
 
   async removeItemFromCart(userId: string, productId: string): Promise<any> {
     const cart = await this.getCart(userId);
 
     const itemIndex = cart.items.findIndex((item) => item.productId == productId);
+    
 
     if (itemIndex > -1) {
       cart.items.splice(itemIndex, 1);
