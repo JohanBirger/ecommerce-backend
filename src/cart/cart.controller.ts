@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Request, UseGuards, Delete, NotFoundException, Param, Get} from '@nestjs/common';
+import { Controller, Post, Body, Request, UseGuards, Delete, NotFoundException, Param, Get, Put} from '@nestjs/common';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -7,10 +7,11 @@ import { CartService } from './cart.service';
 import { ItemDTO } from './dtos/item.dto';
 
 @Controller('cart')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class CartController {
   constructor(private cartService: CartService) { }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+
   @Roles(Role.User)
   @Get('/')
   async getCart(@Request() req) {
@@ -19,7 +20,7 @@ export class CartController {
     return cart;
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+
   @Roles(Role.User)
   @Get('/count')
   async getCartCount(@Request() req) {
@@ -28,7 +29,7 @@ export class CartController {
     return cartCount;
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+
   @Roles(Role.User)
   @Post('/')
   async addItemToCart(@Request() req, @Body() itemDTO: ItemDTO) {
@@ -37,17 +38,33 @@ export class CartController {
     return cart;
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+
   @Roles(Role.User)
   @Delete('/')
   async removeItemFromCart(@Request() req, @Body() { productId }) {
     const userId = req.user.userId;
+    console.log(userId,productId)
+    
     const cart = await this.cartService.removeItemFromCart(userId, productId);
     if (!cart) throw new NotFoundException('Item does not exist');
     return cart;
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  
+  @Roles(Role.User)
+  @Put('/')
+  async updateItemQuantityInCart(@Request() req, @Body() { productId, quantity }) {
+    const userId = req.user.userId;
+    console.log(userId,productId)
+    try{
+      const cart = await this.cartService.updateItemQuantityInCart(userId, productId, quantity);
+      if (!cart) throw new NotFoundException('Item does not exist');
+      return cart;
+    } catch (error){
+      throw new Error("Unhandled error")
+    }
+  }
+
   @Roles(Role.User)
   @Delete('/:id')
   async deleteCart(@Param('id') userId: string) {
