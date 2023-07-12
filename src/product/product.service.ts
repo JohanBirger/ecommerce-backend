@@ -10,21 +10,23 @@ import { Injectable, NotAcceptableException } from '@nestjs/common';
 export class ProductService {
   constructor(@InjectModel('Product') private readonly productModel: Model<ProductDocument>) { }
 
+  
   async getFilteredProducts(filterProductDTO: FilterProductDTO): Promise<Product[]> {
     const { category, search } = filterProductDTO;
     let products = await this.getAllProducts();
-
+  
     if (search) {
+      const lowerCaseSearch = search.toLowerCase();
       products = products.filter(product => 
-        product.name.includes(search) ||
-        product.description.includes(search)
+        product.name.toLowerCase().includes(lowerCaseSearch) ||
+        product.description.toLowerCase().includes(lowerCaseSearch)
       );
     }
-
+  
     if (category) {
       products = products.filter(product => product.category === category)
     }
-
+  
     return products;
   }
 
