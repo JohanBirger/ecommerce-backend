@@ -98,7 +98,13 @@ export class CartService {
     if (itemIndex > -1) {
       cart.items.splice(itemIndex, 1);
       this.updateCartTotal(cart);
+      if (cart.items.length < 1) {
+        this.deleteCart(userId);
+      }
       return cart.save();
     }
+
+    
+
   }
 }
