@@ -6,10 +6,16 @@ import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
 import { CartModule } from './cart/cart.module';
 import { AuthModule } from './auth/auth.module';
-import 'dotenv/config';
+import { SendgridService } from './utils/sendgrid.service';
+import { ConfigModule } from '@nestjs/config';
+import {CryptoModule} from './utils/crypto/crypto.module';
+
+import 'dotenv/config'
 
 @Module({
+  
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRootAsync({
       useFactory: () => ({
         uri: `mongodb+srv://johbirger:${process.env.MONGOKEY}@cluster0.ddwvlsd.mongodb.net/`,
@@ -19,8 +25,10 @@ import 'dotenv/config';
     UserModule,
     AuthModule,
     CartModule,
+    CryptoModule,
+    
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,SendgridService],
 })
 export class AppModule {}

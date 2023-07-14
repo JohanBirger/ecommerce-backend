@@ -18,6 +18,9 @@ export class User {
 
   @Prop()
   roles: Role[];
+
+  @Prop()
+  resetToken?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

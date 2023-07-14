@@ -1,7 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { JwtService } from '@nestjs/jwt'; // 1
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+
+interface JwtPayload {
+  username: string;
+  sub: string;
+  roles: string[];
+}
 
 @Injectable()
 export class AuthService {
@@ -29,5 +35,16 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+  
+  decodeJwt(token: string): JwtPayload {
+    if (token){
+    if (token.startsWith('Bearer ')) {
+      // Remove Bearer from string
+      token = token.slice(7, token.length);
+    }
+    return this.jwtService.decode(token) as JwtPayload;
+  }
+  return;
   }
 }

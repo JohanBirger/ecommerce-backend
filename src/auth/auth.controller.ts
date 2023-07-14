@@ -35,7 +35,7 @@ export class AuthController {
 
   @Post('/logout')
   async logout(@Request() req) {
-    req.headers.authorization = '';
+    req.headers.authorization = ''; // blacklist to be implemented to invalidate token
     return { message: 'Logged out successfully' };
   }
 
@@ -52,4 +52,5 @@ export class AuthController {
   getDashboard(@Request() req) {
     return req.user;
   }
+
 }
