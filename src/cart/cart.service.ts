@@ -47,6 +47,7 @@ export class CartService {
     const subTotalPrice = quantity * price;
   
     const cart = await this.getCart(userId);
+    //console.log(cart,userId)
   
     if (cart) {
       const itemIndex = cart.items.findIndex((item) => item.productId == productId);
@@ -86,6 +87,7 @@ export class CartService {
       console.log('Updated cart:', cart);
       return cart.save();
     }
+    
   }
   
 

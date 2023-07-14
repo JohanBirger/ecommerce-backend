@@ -3,10 +3,15 @@ import { AppModule } from './app.module';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { connectDB } from './database'; // Import the function to establish the database connection
 import 'dotenv/config';
+import * as dotenv from 'dotenv';
+import * as cookieParser from 'cookie-parser';
+dotenv.config();
 
 async function bootstrap() {
+  
+  
   await connectDB(); // Establish the database connection
-
+  
   const app = await NestFactory.create(AppModule);
 
   const corsOptions: CorsOptions = {
@@ -19,6 +24,7 @@ async function bootstrap() {
   };
 
   app.enableCors(corsOptions);
+  app.use(cookieParser());
 
   await app.listen(3000);
 }

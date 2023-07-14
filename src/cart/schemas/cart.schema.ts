@@ -6,7 +6,7 @@ export type CartDocument = Cart & Document;
 
 @Schema()
 export class Cart {
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
+  @Prop({ type: SchemaTypes.Mixed, ref: 'User' })
   userId: string;
 
   @Prop()

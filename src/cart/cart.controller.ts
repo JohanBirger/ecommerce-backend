@@ -5,19 +5,31 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { CartService } from './cart.service';
 import { ItemDTO } from './dtos/item.dto';
+import { AuthService } from '../auth/auth.service';
 
 @Controller('cart')
-@UseGuards(JwtAuthGuard, RolesGuard)
+
 export class CartController {
-  constructor(private cartService: CartService) { }
+  constructor(private cartService: CartService,  private readonly authService : AuthService)
+  { }
 
 
-  @Roles(Role.User)
+
   @Get('/')
   async getCart(@Request() req) {
-    const userId = req.user.userId;
-    const cart = await this.cartService.getCart(userId);
-    return cart;
+      const jwtUser = this.authService.decodeJwt(req.headers.authorization);
+      const userId = jwtUser?.sub; // Get the userId from the decoded JWT token // decode JWT token
+      console.log(userId)
+      if(userId){
+        const cart = await this.cartService.getCart(userId);
+        return cart;
+      }
+      const visitor_token = req.cookies.visitor_token;
+      console.log(visitor_token)
+      if (visitor_token){
+        const cart = await this.cartService.getCart(visitor_token);
+        return cart;
+      }
   }
 
 
@@ -29,39 +41,64 @@ export class CartController {
     return cartCount;
   }
 
-
-  @Roles(Role.User)
+  
   @Post('/')
   async addItemToCart(@Request() req, @Body() itemDTO: ItemDTO) {
-    const userId = req.user.userId;
-    const cart = await this.cartService.addItemToCart(userId, itemDTO);
-    return cart;
-  }
+    const jwtUser = this.authService.decodeJwt(req.headers.authorization);
+    const userId = jwtUser?.sub; // Get the userId from the decoded JWT token // decode JWT token
+    console.log(userId)
+    if (userId){
+      const cart = await this.cartService.addItemToCart(userId, itemDTO);
+      return cart;
+    }
+    const visitor_token = req.cookies.visitor_token;
+    if (visitor_token){
+      const cart = await this.cartService.addItemToCart(visitor_token, itemDTO);
+      return cart;
+    }
+      
+}
 
+  
 
-  @Roles(Role.User)
   @Delete('/')
   async removeItemFromCart(@Request() req, @Body() { productId }) {
-    const userId = req.user.userId;
-    console.log(userId,productId)
     
-    const cart = await this.cartService.removeItemFromCart(userId, productId);
+    const jwtUser = this.authService.decodeJwt(req.headers.authorization);
+    const userId = jwtUser?.sub; // Get the userId from the decoded JWT token // decode JWT token
+    console.log(userId)
+    if(userId){
+      const cart = await this.cartService.removeItemFromCart(userId, productId);
     if (!cart) throw new NotFoundException('Item does not exist');
     return cart;
+    }
+    const visitor_token = req.cookies.visitor_token;
+    console.log(visitor_token)
+    if (visitor_token){
+      const cart = await this.cartService.removeItemFromCart(visitor_token, productId);
+    if (!cart) throw new NotFoundException('Item does not exist');
+    return cart;
+    }  
+    
   }
 
   
-  @Roles(Role.User)
+
   @Put('/')
   async updateItemQuantityInCart(@Request() req, @Body() { productId, quantity }) {
-    const userId = req.user.userId;
-    console.log(userId,productId)
-    try{
+    const jwtUser = this.authService.decodeJwt(req.headers.authorization);
+    const userId = jwtUser?.sub; // Get the userId from the decoded JWT token // decode JWT token
+    console.log(userId)
+    if (userId){
       const cart = await this.cartService.updateItemQuantityInCart(userId, productId, quantity);
       if (!cart) throw new NotFoundException('Item does not exist');
       return cart;
-    } catch (error){
-      throw new Error("Unhandled error")
+    }
+    const visitor_token = req.cookies.visitor_token;
+    if (visitor_token){
+      const cart = await this.cartService.updateItemQuantityInCart(visitor_token, productId, quantity);
+      if (!cart) throw new NotFoundException('Item does not exist');
+      return cart;
     }
   }
 
