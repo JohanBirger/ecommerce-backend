@@ -7,7 +7,9 @@ export class CryptoController {
 
     @Get('/')
     async getToken() {
-        return this.cryptoService.generateToken();
+        const token = this.cryptoService.generateToken();
+        console.log(token)
+        return token;
     }
 
     

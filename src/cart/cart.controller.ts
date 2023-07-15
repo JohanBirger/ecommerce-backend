@@ -96,6 +96,7 @@ export class CartController {
     }
     const visitor_token = req.cookies.visitor_token;
     if (visitor_token){
+      
       const cart = await this.cartService.updateItemQuantityInCart(visitor_token, productId, quantity);
       if (!cart) throw new NotFoundException('Item does not exist');
       return cart;
