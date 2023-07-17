@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { SendgridService } from './utils/sendgrid.service';
 import { ConfigModule } from '@nestjs/config';
 import {CryptoModule} from './utils/crypto/crypto.module';
+import { ImagesModule } from './images/images.module';
 
 import 'dotenv/config'
 
@@ -26,6 +27,7 @@ import 'dotenv/config'
     AuthModule,
     CartModule,
     CryptoModule,
+    ImagesModule,
     
   ],
   controllers: [AppController],
