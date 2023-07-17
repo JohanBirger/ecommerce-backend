@@ -23,7 +23,7 @@ async function bootstrap() {
   console.log(frontend)
 
   const corsOptions: CorsOptions = {
-    origin: frontend, // Replace with your frontend URL 
+    origin: frontend,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 200,
