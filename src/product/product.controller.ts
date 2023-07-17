@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Put, Delete, Body, Param, Query, NotFoundException, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, Query, NotFoundException, UseGuards, UploadedFile } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDTO } from './dtos/create-product.dto';
 import { FilterProductDTO } from './dtos/filter-product.dto';
@@ -8,9 +8,12 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 
 
+
+
 @Controller('store/products')
 export class ProductController {
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService,
+              ) { }
 
   @Get('/')
   async getProducts(@Query() filterProductDTO: FilterProductDTO) {
@@ -33,8 +36,22 @@ export class ProductController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Post('/')
-  async addProduct(@Body() createProductDTO: CreateProductDTO) {
-    const product = await this.productService.addProduct(createProductDTO);
+  async addProduct(
+    @Body() createProductDTO: CreateProductDTO, // Add file parameter
+  ) {
+    const { name, description, price, category,image } = createProductDTO;
+    // Upload the file and retrieve the file info
+    //const fileInfo = await this.filesService.writeFile(file);
+
+    // Create the product with the file info
+    const product = await this.productService.addProduct({
+      name,
+      description,
+      price,
+      category,
+      image,
+    });
+
     return product;
   }
 
