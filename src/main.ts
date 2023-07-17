@@ -13,7 +13,7 @@ dotenv.config();
 async function bootstrap() {
   
   
-  await connectDB(); // Establish the database connection
+  await connectDB();
   
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
