@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import { connectDB } from './database'; // Import the function to establish the database connection
+import { connectDB } from './database'; 
 import 'dotenv/config';
 import * as dotenv from 'dotenv';
 import { ConfigService } from "@nestjs/config";
