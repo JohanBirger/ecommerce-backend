@@ -23,7 +23,9 @@ async function bootstrap() {
   console.log(frontend)
 
   const corsOptions: CorsOptions = {
-    origin: frontend,
+    origin: (origin, callback) => {
+      callback(null, true);
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 200,
