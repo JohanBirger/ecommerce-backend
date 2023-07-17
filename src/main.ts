@@ -7,6 +7,7 @@ import * as dotenv from 'dotenv';
 import { ConfigService } from "@nestjs/config";
 import * as cookieParser from 'cookie-parser';
 import { urlencoded, json } from 'express';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -34,6 +35,9 @@ async function bootstrap() {
 
   app.enableCors(corsOptions);
   app.use(cookieParser());
+
+  
+  
 
   await app.listen(3000);
 }
