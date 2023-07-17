@@ -13,7 +13,7 @@ dotenv.config();
 async function bootstrap() {
   
   
-  await connectDB(); // Establish the database connection
+  await connectDB();
   
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
@@ -23,9 +23,7 @@ async function bootstrap() {
   console.log(frontend)
 
   const corsOptions: CorsOptions = {
-    origin: (origin, callback) => {
-      callback(null, true);
-    },
+    origin: frontend,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 200,
