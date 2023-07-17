@@ -19,7 +19,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
-  const frontend = await configService.get<string>('FRONTEND_URL');
+  const frontend = await configService.get<string>('FRONTEND_COOKIES');
   console.log(frontend)
 
   const corsOptions: CorsOptions = {
@@ -28,7 +28,8 @@ async function bootstrap() {
     preflightContinue: false,
     optionsSuccessStatus: 200,
     credentials: true,
-    allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization',
+    allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization,Access-Control-Allow-Credentials',
+    
   };
 
   app.enableCors(corsOptions);
