@@ -19,7 +19,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
-  const frontend = await configService.get<string>('FRONTEND_COOKIES');
+  const frontend = await configService.get<string>('FRONTEND_URL');
   console.log(frontend)
 
   const corsOptions: CorsOptions = {
