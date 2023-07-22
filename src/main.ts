@@ -22,7 +22,7 @@ async function bootstrap() {
   app.use(urlencoded({ extended: true, limit: '50mb' }));
   const frontend = await configService.get<string>('FRONTEND_URL');
   console.log(frontend)
-
+  
   const corsOptions: CorsOptions = {
     origin: frontend,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -36,8 +36,6 @@ async function bootstrap() {
   app.enableCors(corsOptions);
   app.use(cookieParser());
 
-  
-  
 
   await app.listen(3000);
 }

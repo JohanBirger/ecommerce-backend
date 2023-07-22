@@ -27,6 +27,13 @@ export class CartService {
     return cart;
   }
 
+  async getCartById(cartId: string): Promise<CartDocument> {
+    console.log('getCardById.service',cartId)
+    const cart = await this.cartModel.findById({ _id: cartId });
+    console.log('getCartbyId.serivce',cart)
+    return cart;
+  }
+
   async getCartCount(userId: string):Promise<Number> {
     const cart = await this.cartModel.findOne({ userId });
     return cart.items.length;
@@ -39,6 +46,7 @@ export class CartService {
 
   private updateCartTotal(cart: CartDocument) {
     cart.totalPrice = cart.items.reduce((total, item) => total + item.subTotalPrice, 0);
+   
   
   }
   
@@ -102,6 +110,7 @@ export class CartService {
       this.updateCartTotal(cart);
       if (cart.items.length < 1) {
         this.deleteCart(userId);
+        return 'Cart Deleted';
       }
       return cart.save();
     }
