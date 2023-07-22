@@ -14,6 +14,9 @@ export class Cart {
 
   @Prop()
   totalPrice: number; 
+
+  //@Prop()
+  //totalPriceInEther:number;
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);

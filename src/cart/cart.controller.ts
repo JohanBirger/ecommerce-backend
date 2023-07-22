@@ -32,6 +32,17 @@ export class CartController {
       }
   }
 
+  @Get('/:id')
+  async getCartById(@Param('id') cartId:string) {
+      
+      if(cartId){
+        const cart = await this.cartService.getCartById(cartId);
+        console.log('controller.getCartById',cart)
+        return cart;
+      }
+      return null;
+  }
+
 
   @Roles(Role.User)
   @Get('/count')
@@ -69,6 +80,7 @@ export class CartController {
     console.log(userId)
     if(userId){
       const cart = await this.cartService.removeItemFromCart(userId, productId);
+    if (cart === 'Cart Deleted') return null;
     if (!cart) throw new NotFoundException('Item does not exist');
     return cart;
     }
@@ -76,6 +88,7 @@ export class CartController {
     console.log(visitor_token)
     if (visitor_token){
       const cart = await this.cartService.removeItemFromCart(visitor_token, productId);
+    if (cart === 'Cart Deleted') return null;
     if (!cart) throw new NotFoundException('Item does not exist');
     return cart;
     }  
