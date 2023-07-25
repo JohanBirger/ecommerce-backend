@@ -42,19 +42,18 @@ export class SendgridService {
       console.log("service.sendOrder")
       const user = await this.userService.getUserById(userId);
       const email = await user.email;
-      const token = await user.resetToken;
-      const baseUrl = this.configService.get<string>('FRONTEND_URL');
-      const extentionUrl= '/resetpassword/'
-      const urlprepared = `${baseUrl+extentionUrl+token}`
+      
+      
  
       const mail = {
         to: email,
         subject: 'Your Order has arrived!',
         from: 'johankoddar@gmail.com',
-        templateId:'',
+        templateId:'443e39d9398048dfab3e8fc4f6601f7e',
         dynamicTemplateData: {
-          ///
-
+          order: order.txHash,
+          items: order.items,
+          time: order.time,
         },
     };
       const transport = await SendGrid.send(mail);
